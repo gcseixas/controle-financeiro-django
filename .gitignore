@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django
+db.sqlite3
+.env
+.env.*
+*.log
+
+# Virtualenv
+venv/
+.env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Static files (se usar collectstatic futuramente)
+staticfiles/

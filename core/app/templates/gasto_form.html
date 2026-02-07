@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if form.instance.pk %}Editar{% else %}Novo{% endif %} Gasto - Controle de Gastos{% endblock %}
+
+{% block content %}
+
+<div class="form-container">
+    <div class="form-card">
+        <div class="form-header">
+            <h1>
+                {% if form.instance.pk %}
+                    Editar Gasto
+                {% else %}
+                    Novo Gasto
+                {% endif %}
+            </h1>
+            <p>Preencha os dados abaixo</p>
+        </div>
+
+        <form method="POST" class="standard-form">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Descrição</label>
+                {{ form.descricao }}
+
+                {% if form.descricao.errors %}
+                <small class="form-error">
+                    {{ form.descricao.errors }}
+                </small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label>Valor</label>
+                {{ form.valor }}
+
+                {% if form.valor.errors %}
+                <small class="form-error">
+                    {{ form.valor.errors }}
+                </small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label>Data</label>
+                {{ form.data }}
+
+                {% if form.data.errors %}
+                <small class="form-error">
+                    {{ form.data.errors }}
+                </small>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <a href="{% url 'dashboard' %}" class="btn btn-outline">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

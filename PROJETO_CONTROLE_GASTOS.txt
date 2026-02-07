@@ -1,0 +1,61 @@
+CONTROLE DE GASTOS PESSOAIS – DOCUMENTO DO PROJETO
+=================================================
+
+Objetivo
+--------
+Criar uma aplicação web simples em Django para controle de gastos pessoais, com foco em aprender o fluxo completo de desenvolvimento (model → view → template → form → banco → deploy).
+
+Este projeto tem finalidade educacional e de portfólio.
+
+Descrição do Projeto
+--------------------
+Aplicação onde usuários podem se cadastrar, registrar despesas e visualizar o total de gastos do mês.
+
+Escopo propositalmente reduzido para permitir conclusão, manutenção simples e publicação online.
+
+Funcionalidades (Escopo Fechado)
+--------------------------------
+Essenciais:
+- Cadastro de usuário
+- Login e logout
+- Cadastro de gasto
+- Listagem de gastos do usuário
+- Edição de gasto
+- Exclusão de gasto
+- Cálculo do total do mês atual
+
+Opcional:
+- Filtro por mês
+- Categoria simples para gasto
+- Página inicial explicativa
+
+Modelo de Dados
+---------------
+Entidade: Gasto
+
+Campos:
+- usuario (ForeignKey para User)
+- descricao (CharField)
+- valor (DecimalField)
+- data (DateField)
+- criado_em (DateTimeField)
+
+Regras do Projeto
+-----------------
+- Apenas 1 app Django
+- Apenas 1 model principal
+- Sem API
+- Templates simples
+- Autenticação padrão do Django
+
+Fluxo Básico
+------------
+1. Usuário cria conta ou faz login
+2. Registra gastos
+3. Visualiza lista e total mensal
+4. Edita ou exclui gastos
+
+Observação
+----------
+Projeto simples, finalizado e publicável.
+Feito é melhor que perfeito.
