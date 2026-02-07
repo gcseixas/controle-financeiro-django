@@ -4,10 +4,9 @@ from django.contrib.auth import authenticate, login, logout
 from app.forms import CadastroUsuarioForm, GastoForm
 from app.models import Gasto
 from django.contrib.auth.decorators import login_required
-from datetime import date
-import locale
 from django.db.models import Sum
 from django.utils import timezone
+from django.utils.formats import date_format
 
 
 
@@ -94,36 +93,28 @@ def novo_gasto(request, gasto_id=None):
 
 @login_required
 def dashboard(request):
-    
-    locale.setlocale(locale.LC_TIME, 'pt_BR.UTF-8')
-
     hoje = timezone.now().date()
-    nome_mes = hoje.strftime('%B').capitalize()
+    nome_mes = date_format(hoje, "F")
     ano_atual = hoje.year
-    
-    gastos = Gasto.objects.filter(usuario=request.user)
-    
-    total_mes = Gasto.objects.filter(
-            usuario=request.user,
-            data__month=hoje.month,
-            data__year=hoje.year
-        )
-    
-    total_mes = total_mes.aggregate(total=Sum("valor"))["total"] or 0
 
-       
-    print(total_mes)
-    
+    gastos = Gasto.objects.filter(usuario=request.user)
+
+    total_mes = gastos.filter(
+        data__month=hoje.month,
+        data__year=hoje.year
+    ).aggregate(total=Sum("valor"))["total"] or 0
+
     return render(
-        request, 
+        request,
         "dashboard.html",
         {
             'gastos': gastos,
             'mes_atual': nome_mes,
             'ano_atual': ano_atual,
             'total_mes': total_mes
-        } 
-        )
+        }
+    )
+
 
 
 def logout_view(request):
