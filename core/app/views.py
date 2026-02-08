@@ -97,7 +97,9 @@ def dashboard(request):
     nome_mes = date_format(hoje, "F")
     ano_atual = hoje.year
 
-    gastos = Gasto.objects.filter(usuario=request.user)
+    gastos = Gasto.objects.filter(
+        usuario=request.user
+    ).order_by("-data")
 
     total_mes = gastos.filter(
         data__month=hoje.month,
