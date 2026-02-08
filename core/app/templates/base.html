@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controle de Gastos</title>
+    <title>{% block title %}Controle de Gastos{% endblock %}</title>
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,21 +21,26 @@
         </div>
 
         <div class="nav-menu">
-            {% if user.is_authenticated  %}
-            <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
-            <a href="{% url 'novo_gasto' %}" class="nav-link">Novo Gasto</a>
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="nav-link">Sair</button>
-            </form>
-            
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+                <a href="{% url 'novo_gasto' %}" class="nav-link">Novo Gasto</a>
+                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link">Sair</button>
+                </form>
             {% else %}
-            <a href="{% url 'login' %}" class="nav-link">Entrar</a>
-            <a href="{% url 'cadastro' %}" class="btn btn-primary">Cadastrar</a>
+                <a href="{% url 'login' %}" class="nav-link">Entrar</a>
+                <a href="{% url 'cadastro' %}" class="btn btn-primary">Cadastrar</a>
             {% endif %}
+            
+            <button id="theme-toggle" class="theme-toggle" aria-label="Alternar tema">
+                <span class="theme-icon sun">☀️</span>
+                <span class="theme-icon moon">🌙</span>
+            </button>
         </div>
     </div>
 </nav>
+
 {% if messages %}
   <div class="messages-container">
     {% for message in messages %}
@@ -47,18 +52,50 @@
   </div>
 {% endif %}
 
-
 <main class="main-content">
-    <!-- Conteúdo das páginas -->
+    {% block content %}
+    {% endblock %}
 </main>
-{% block content %}
 
-{% endblock %}
 <footer class="footer">
     <div class="container">
-        <p>&copy; 2025 Controle de Gastos. Projeto educacional.</p>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Sobre o Projeto</h3>
+                <p>Sistema completo de controle de gastos pessoais desenvolvido com Django e tecnologias modernas.</p>
+                <p style="margin-top: 1rem;">Projeto educacional criado para demonstrar habilidades em desenvolvimento web full-stack.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Recursos</h3>
+                <p>✓ Registro de gastos</p>
+                <p>✓ Visualização de totais</p>
+                <p>✓ Edição e exclusão</p>
+                <p>✓ Dashboard interativo</p>
+                <p>✓ Tema claro/escuro</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contato do Desenvolvedor</h3>
+                <div class="contact-item">
+                    <span class="contact-icon">📱</span>
+                    <a href="https://wa.me/5521994267868" target="_blank">(21) 99426-7868</a>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">💼</span>
+                    <span>Disponível para oportunidades</span>
+                </div>
+                <p style="margin-top: 1rem; font-size: 0.8rem;">Entre em contato para discutir projetos ou oportunidades profissionais.</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Controle de Gastos. Desenvolvido com Django, Python e JavaScript.</p>
+            <p style="margin-top: 0.5rem;">Projeto open source para fins educacionais e demonstração de portfolio.</p>
+        </div>
     </div>
 </footer>
+
 <script src="{% static 'js/script.js' %}"></script>
 
 </body>

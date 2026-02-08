@@ -9,59 +9,86 @@
         <div class="dashboard-header">
             <div>
                 <h1>Dashboard</h1>
-                <p class="text-muted">Bem-vindo!</p>
+                <p class="text-muted">Bem-vindo, {{ user.username }}!</p>
             </div>
-            <a href="{% url 'novo_gasto' %}" class="btn btn-primary">+ Novo Gasto</a>
+            <a href="{% url 'novo_gasto' %}" class="btn btn-primary">
+                ➕ Novo Gasto
+            </a>
         </div>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <p class="stat-label">Mês Atual</p>
+                <p class="stat-label">📅 Mês Atual</p>
                 <h2 class="stat-value">{{ mes_atual }} / {{ ano_atual }}</h2>
             </div>
 
             <div class="stat-card">
-                <p class="stat-label">Total do Mês</p>
-                <h2 class="stat-value">R$ {{ total_mes }}</h2>
+                <p class="stat-label">💰 Total do Mês</p>
+                <h2 class="stat-value">R$ {{ total_mes|default:"0,00" }}</h2>
             </div>
 
             <div class="stat-card">
-                <p class="stat-label">Total de Gastos</p>
-                <h2 class="stat-value">0</h2>
+                <p class="stat-label">📊 Total de Gastos</p>
+                <h2 class="stat-value">{{ gastos|length }}</h2>
             </div>
         </div>
 
         <div class="gastos-section">
-            <h2>Seus Gastos</h2>
+            <h2>💳 Seus Gastos</h2>
 
-            <table class="gastos-table">
-                <thead>
-                    <tr>
-                        <th>Data </th>
-                        <th>Descrição </th>
-                        <th>Valor </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for gasto in gastos %}
-                    <tr>
-                        <td>{{ gasto.data }}</td>
-                        <td>{{ gasto.descricao }}</td>
-                        <td class="valor">{{ gasto.valor }}</td>
-                        <td>
-                            <a href="{% url 'gasto_editar' gasto.id %}">Editar</a>
-                        </td>
-                        <td>
-                            <form method="POST" action="{% url 'excluir_gasto' gasto.id %}">
-                                {% csrf_token %}
-                                <button type="submit">Excluir</button>
-                            </form>
-                        </td>
-                        {% endfor %}
-                    </tr>
-
-                </tbody>
-            </table>
+            {% if gastos %}
+                <div style="overflow-x: auto;">
+                    <table class="gastos-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Descrição</th>
+                                <th>Valor</th>
+                                <th style="text-align: center;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for gasto in gastos %}
+                            <tr>
+                                <td>{{ gasto.data|date:"d/m/Y" }}</td>
+                                <td>{{ gasto.descricao }}</td>
+                                <td class="valor">R$ {{ gasto.valor }}</td>
+                                <td>
+                                    <div class="actions">
+                                        <a href="{% url 'gasto_editar' gasto.id %}" 
+                                           class="action-btn" 
+                                           title="Editar gasto"
+                                           aria-label="Editar gasto">
+                                            ✏️
+                                        </a>
+                                        <form method="POST" 
+                                              action="{% url 'excluir_gasto' gasto.id %}" 
+                                              style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" 
+                                                    class="action-btn delete" 
+                                                    title="Excluir gasto"
+                                                    aria-label="Excluir gasto">
+                                                🗑️
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <h3>Nenhum gasto registrado</h3>
+                    <p>Comece adicionando seu primeiro gasto para acompanhar suas finanças.</p>
+                    <a href="{% url 'novo_gasto' %}" class="btn btn-primary">
+                        ➕ Adicionar Primeiro Gasto
+                    </a>
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>

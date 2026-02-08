@@ -12,26 +12,42 @@
 
         <form method="POST" class="auth-form">
             {% csrf_token %}
+            
             <div class="form-group">
-                <label>E-mail</label>
-                <input name="username" type="text">
+                <label for="username">E-mail</label>
+                <input 
+                    id="username"
+                    name="username" 
+                    type="text"
+                    autocomplete="email"
+                    placeholder="seu@email.com"
+                    required
+                >
             </div>
 
             <div class="form-group">
-                <label>Senha</label>
+                <label for="password">Senha</label>
                 <div class="password-input">
-                    <input name="password" type="password">
-                    <button type="submit" class="password-toggle"></button>
+                    <input 
+                        id="password"
+                        name="password" 
+                        type="password"
+                        autocomplete="current-password"
+                        placeholder="Digite sua senha"
+                        required
+                    >
+                    <button type="button" class="password-toggle" aria-label="Mostrar senha"></button>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+            <button type="submit" class="btn btn-primary btn-block">
+                Entrar
+            </button>
         </form>
 
         <div class="auth-footer">
-            <p>Não tem uma conta? <a href="#">Cadastrar</a></p>
+            <p>Não tem uma conta? <a href="{% url 'cadastro' %}">Cadastrar</a></p>
         </div>
     </div>
 </div>
-
 {% endblock %}

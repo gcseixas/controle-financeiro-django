@@ -11,6 +11,14 @@
             <p class="hero-subtitle">
                 Registre suas despesas, visualize seus gastos mensais e tenha controle total das suas finanças pessoais.
             </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
+                <a href="{% url 'cadastro' %}" class="btn btn-primary btn-lg">
+                    Começar Agora
+                </a>
+                <a href="{% url 'login' %}" class="btn btn-outline btn-lg" style="color: white; border-color: white;">
+                    Já tenho conta
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -23,26 +31,32 @@
             <div class="feature-card">
                 <div class="feature-icon">📝</div>
                 <h3>Registre Gastos</h3>
-                <p>Adicione suas despesas de forma rápida e fácil.</p>
+                <p>Adicione suas despesas de forma rápida e fácil com interface intuitiva.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">📊</div>
                 <h3>Visualize Totais</h3>
-                <p>Acompanhe seus gastos mensais.</p>
+                <p>Acompanhe seus gastos mensais com estatísticas em tempo real.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">✏️</div>
                 <h3>Edite e Exclua</h3>
-                <p>Atualize ou remova gastos quando quiser.</p>
+                <p>Atualize ou remova gastos quando quiser com apenas um clique.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">🔒</div>
                 <h3>Seguro e Privado</h3>
-                <p>Seus dados são protegidos.</p>
+                <p>Seus dados são protegidos com autenticação segura.</p>
             </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="{% url 'cadastro' %}" class="btn btn-primary btn-lg">
+                Criar Conta Grátis
+            </a>
         </div>
     </div>
 </div>
