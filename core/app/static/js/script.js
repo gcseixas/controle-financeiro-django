@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ==================== Tema (claro / escuro) ====================
+    // ==================== Tema ====================
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
 
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==================== Toggle de Senha ====================
+    // ==================== Toggle de senha ====================
     document.querySelectorAll('.password-toggle').forEach(toggle => {
         toggle.type = 'button';
         toggle.textContent = '👁️';
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ==================== Confirmação de Exclusão ====================
+    // ==================== Modal de exclusão ====================
     document.querySelectorAll('form[action*="excluir"]').forEach(form => {
         form.addEventListener('submit', e => {
             e.preventDefault();
