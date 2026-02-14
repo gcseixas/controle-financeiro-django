@@ -94,70 +94,43 @@ def novo_gasto(request, gasto_id=None):
 
 @login_required
 def dashboard(request):
-    hoje = timezone.now().date()
-    nome_mes = date_format(hoje, "F")
-    ano_atual = hoje.year
+    nome_mes = ''
+    ano_atual = ''
 
-    gastos = Gasto.objects.filter(
+    gastos = Gasto.filtrar(
         usuario=request.user
     ).order_by("-data")
     
-    anos = (
-        gastos
-        .annotate(ano=ExtractYear("data"))
-        .values_list("ano", flat=True)
-        .distinct()
-        .order_by("ano")
+    anos = Gasto.pegar_anos(
+        usuario=request.user
     )
-    
-    anos = list(anos)
-    
-    if request.GET.get("mes") and request.GET.get('ano'):
-        dados = request.GET.dict()
-        total_mes = gastos.filter(
-            data__month=dados['mes'],
-            data__year=dados['ano']
-        ).aggregate(total=Sum("valor"))["total"] or 0  
         
-        gastos = gastos.filter(
-            data__month=dados['mes'],
-            data__year=dados['ano']
+    if request.GET.get("mes") or request.GET.get('ano'):
+        dados = request.GET.dict()
+        
+        gastos = Gasto.filtrar(
+            usuario= request.user,
+            mes=dados['mes'],
+            ano=dados['ano']
         )
         
-    elif request.GET.get("mes"):
-        dados = request.GET.dict()
-        total_mes = gastos.filter(
-            data__month=dados['mes'],
-
-        ).aggregate(total=Sum("valor"))["total"] or 0  
+        total_mes = Gasto.calcular_total(gastos)
         
-        gastos = gastos.filter(
-            data__month=dados['mes'],
-        )
+        ano_atual = dados['ano']
+        numero_mes = int(dados['mes'])
         
-    elif request.GET.get("ano"):
-        dados = request.GET.dict()
-        total_mes = gastos.filter(
-            data__year=dados['ano']
-        ).aggregate(total=Sum("valor"))["total"] or 0  
-        
-        gastos = gastos.filter(
-            data__year=dados['ano']
-        )
-
+        nome_mes = Gasto.nome_do_mes(numero_mes)
+                
     else:
-        total_mes = gastos.filter(
-            data__month=hoje.month,
-            data__year=hoje.year
-        ).aggregate(total=Sum("valor"))["total"] or 0
-
-   
+        total_mes = Gasto.calcular_total(gastos)
+        
+        
     return render(
         request,
         "dashboard.html",
         {
             'gastos': gastos,
-            'mes_atual': nome_mes,
+            'nome_mes': nome_mes,
             'ano_atual': ano_atual,
             'total_mes': total_mes,
             'anos': anos

@@ -9,7 +9,7 @@
         <div class="dashboard-header">
             <div>
                 <h1>Dashboard</h1>
-                <p class="text-muted">Bem-vindo, {{ user.username }}!</p>
+                <p class="text-muted">Bem-vindo, {{ user.nome }}!</p>
             </div>
             <a href="{% url 'novo_gasto' %}" class="btn btn-primary">
                 ➕ Novo Gasto
@@ -58,8 +58,8 @@
 
         <div class="stats-grid">
             <div class="stat-card">
-                <p class="stat-label">📅 Período Selecionado</p>
-                <h2 class="stat-value">{{ mes_atual|default:"Todos" }} / {{ ano_atual|default:"Todos" }}</h2>
+                <p class="stat-label">📅 Mês / Ano</p>
+                <h2 class="stat-value">{{ nome_mes|default:"-" }} / {{ ano_atual|default:"-" }}</h2>
             </div>
 
             <div class="stat-card">
