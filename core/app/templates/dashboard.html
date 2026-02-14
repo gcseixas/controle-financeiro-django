@@ -16,14 +16,54 @@
             </a>
         </div>
 
+        <!-- Filtro estilizado -->
+        <div class="gastos-section" style="margin-bottom: var(--space-xl);">
+            <form action="{% url 'dashboard' %}" method="GET" class="standard-form">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-lg); align-items: end;">
+                    <div class="form-group">
+                        <label for="mes">📅 Mês:</label>
+                        <select name="mes" id="mes">
+                            <option value="">Todos</option>
+                            <option value="1" {% if request.GET.mes == "1" %}selected{% endif %}>Janeiro</option>
+                            <option value="2" {% if request.GET.mes == "2" %}selected{% endif %}>Fevereiro</option>
+                            <option value="3" {% if request.GET.mes == "3" %}selected{% endif %}>Março</option>
+                            <option value="4" {% if request.GET.mes == "4" %}selected{% endif %}>Abril</option>
+                            <option value="5" {% if request.GET.mes == "5" %}selected{% endif %}>Maio</option>
+                            <option value="6" {% if request.GET.mes == "6" %}selected{% endif %}>Junho</option>
+                            <option value="7" {% if request.GET.mes == "7" %}selected{% endif %}>Julho</option>
+                            <option value="8" {% if request.GET.mes == "8" %}selected{% endif %}>Agosto</option>
+                            <option value="9" {% if request.GET.mes == "9" %}selected{% endif %}>Setembro</option>
+                            <option value="10" {% if request.GET.mes == "10" %}selected{% endif %}>Outubro</option>
+                            <option value="11" {% if request.GET.mes == "11" %}selected{% endif %}>Novembro</option>
+                            <option value="12" {% if request.GET.mes == "12" %}selected{% endif %}>Dezembro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ano">📆 Ano:</label>
+                        <select name="ano" id="ano">
+                            <option value="">Todos</option>
+                            {% for ano in anos %}
+                            <option value="{{ano}}" {% if request.GET.ano == ano|stringformat:"s" %}selected{% endif %}>{{ano}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <button type="submit" class="btn btn-primary btn-block">🔍 Filtrar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <div class="stats-grid">
             <div class="stat-card">
-                <p class="stat-label">📅 Mês Atual</p>
-                <h2 class="stat-value">{{ mes_atual }} / {{ ano_atual }}</h2>
+                <p class="stat-label">📅 Período Selecionado</p>
+                <h2 class="stat-value">{{ mes_atual|default:"Todos" }} / {{ ano_atual|default:"Todos" }}</h2>
             </div>
 
             <div class="stat-card">
-                <p class="stat-label">💰 Total do Mês</p>
+                <p class="stat-label">💰 Total do Período</p>
                 <h2 class="stat-value">R$ {{ total_mes|default:"0,00" }}</h2>
             </div>
 
@@ -37,57 +77,53 @@
             <h2>💳 Seus Gastos</h2>
 
             {% if gastos %}
-                <div style="overflow-x: auto;">
-                    <table class="gastos-table">
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Descrição</th>
-                                <th>Valor</th>
-                                <th style="text-align: center;">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for gasto in gastos %}
-                            <tr>
-                                <td>{{ gasto.data|date:"d/m/Y" }}</td>
-                                <td>{{ gasto.descricao }}</td>
-                                <td class="valor">R$ {{ gasto.valor }}</td>
-                                <td>
-                                    <div class="actions">
-                                        <a href="{% url 'gasto_editar' gasto.id %}" 
-                                           class="action-btn" 
-                                           title="Editar gasto"
-                                           aria-label="Editar gasto">
-                                            ✏️
-                                        </a>
-                                        <form method="POST" 
-                                              action="{% url 'excluir_gasto' gasto.id %}" 
-                                              style="display: inline;">
-                                            {% csrf_token %}
-                                            <button type="submit" 
-                                                    class="action-btn delete" 
-                                                    title="Excluir gasto"
-                                                    aria-label="Excluir gasto">
-                                                🗑️
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+            <div style="overflow-x: auto;">
+                <table class="gastos-table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Descrição</th>
+                            <th>Valor</th>
+                            <th style="text-align: center;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for gasto in gastos %}
+                        <tr>
+                            <td>{{ gasto.data|date:"d/m/Y" }}</td>
+                            <td>{{ gasto.descricao }}</td>
+                            <td class="valor">R$ {{ gasto.valor }}</td>
+                            <td>
+                                <div class="actions">
+                                    <a href="{% url 'gasto_editar' gasto.id %}" class="action-btn" title="Editar gasto"
+                                        aria-label="Editar gasto">
+                                        ✏️
+                                    </a>
+                                    <form method="POST" action="{% url 'excluir_gasto' gasto.id %}"
+                                        style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="action-btn delete" title="Excluir gasto"
+                                            aria-label="Excluir gasto"
+                                            onclick="return confirm('Tem certeza que deseja excluir este gasto?')">
+                                            🗑️
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             {% else %}
-                <div class="empty-state">
-                    <div class="empty-icon">📭</div>
-                    <h3>Nenhum gasto registrado</h3>
-                    <p>Comece adicionando seu primeiro gasto para acompanhar suas finanças.</p>
-                    <a href="{% url 'novo_gasto' %}" class="btn btn-primary">
-                        ➕ Adicionar Primeiro Gasto
-                    </a>
-                </div>
+            <div class="empty-state">
+                <div class="empty-icon">📭</div>
+                <h3>Nenhum gasto registrado</h3>
+                <p>Comece adicionando seu primeiro gasto para acompanhar suas finanças.</p>
+                <a href="{% url 'novo_gasto' %}" class="btn btn-primary">
+                    ➕ Adicionar Primeiro Gasto
+                </a>
+            </div>
             {% endif %}
         </div>
     </div>

@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.utils import timezone
 from django.utils.formats import date_format
+from django.db.models.functions import ExtractYear
 
 
 
@@ -100,12 +101,57 @@ def dashboard(request):
     gastos = Gasto.objects.filter(
         usuario=request.user
     ).order_by("-data")
+    
+    anos = (
+        gastos
+        .annotate(ano=ExtractYear("data"))
+        .values_list("ano", flat=True)
+        .distinct()
+        .order_by("ano")
+    )
+    
+    anos = list(anos)
+    
+    if request.GET.get("mes") and request.GET.get('ano'):
+        dados = request.GET.dict()
+        total_mes = gastos.filter(
+            data__month=dados['mes'],
+            data__year=dados['ano']
+        ).aggregate(total=Sum("valor"))["total"] or 0  
+        
+        gastos = gastos.filter(
+            data__month=dados['mes'],
+            data__year=dados['ano']
+        )
+        
+    elif request.GET.get("mes"):
+        dados = request.GET.dict()
+        total_mes = gastos.filter(
+            data__month=dados['mes'],
 
-    total_mes = gastos.filter(
-        data__month=hoje.month,
-        data__year=hoje.year
-    ).aggregate(total=Sum("valor"))["total"] or 0
+        ).aggregate(total=Sum("valor"))["total"] or 0  
+        
+        gastos = gastos.filter(
+            data__month=dados['mes'],
+        )
+        
+    elif request.GET.get("ano"):
+        dados = request.GET.dict()
+        total_mes = gastos.filter(
+            data__year=dados['ano']
+        ).aggregate(total=Sum("valor"))["total"] or 0  
+        
+        gastos = gastos.filter(
+            data__year=dados['ano']
+        )
 
+    else:
+        total_mes = gastos.filter(
+            data__month=hoje.month,
+            data__year=hoje.year
+        ).aggregate(total=Sum("valor"))["total"] or 0
+
+   
     return render(
         request,
         "dashboard.html",
@@ -113,7 +159,8 @@ def dashboard(request):
             'gastos': gastos,
             'mes_atual': nome_mes,
             'ano_atual': ano_atual,
-            'total_mes': total_mes
+            'total_mes': total_mes,
+            'anos': anos
         }
     )
 
